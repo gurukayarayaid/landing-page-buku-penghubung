@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Panduan Instalasi Firebase &amp; Cloudflare - Buku Penghubung Digital</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root{
+    --g900:#064e45; --g700:#075E54; --g600:#128C7E; --g500:#1faa94;
+    --amber:#FFB300; --ink:#1c2b2a; --muted:#5b6b6a; --line:#e3eae9;
+    --bg:#f6faf9; --blue:#1a73e8; --orange:#f57c00; --red:#d93025;
+  }
+  body{ font-family:'Segoe UI',Arial,sans-serif; color:var(--ink); font-size:11.4px; line-height:1.62; background:#fff; }
+  h1,h2,h3,h4{ color:var(--g900); line-height:1.25; }
+  a{ color:var(--g600); text-decoration:none; word-break:break-all; }
+  code{ font-family:Consolas,'Courier New',monospace; }
+  .page-break{ break-before:page; page-break-before:always; }
+
+  /* ============ COVER ============ */
+  .cover{ background:linear-gradient(150deg,#064e45 0%,#075E54 48%,#128C7E 100%); color:#fff;
+    border-radius:16px; padding:46px 40px 34px; position:relative; overflow:hidden; }
+  .cover::after{ content:""; position:absolute; right:-70px; top:-70px; width:240px; height:240px;
+    border-radius:50%; background:rgba(255,179,0,.20); }
+  .cover .brand{ display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.5px; font-size:13px; opacity:.95; }
+  .cover .logo{ width:38px; height:38px; border-radius:11px; background:rgba(255,255,255,.16);
+    display:grid; place-items:center; font-size:20px; border:1px solid rgba(255,255,255,.3); }
+  .cover h1{ color:#fff; font-size:37px; margin:52px 0 8px; letter-spacing:-.5px; }
+  .cover h1 span{ color:#ffd766; }
+  .cover .sub{ font-size:15.5px; color:rgba(255,255,255,.9); max-width:64ch; }
+  .cover .badges{ display:flex; gap:9px; flex-wrap:wrap; margin-top:26px; }
+  .cover .badges b{ background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.32);
+    padding:6px 13px; border-radius:999px; font-size:11.5px; font-weight:700; }
+  .cover .meta{ margin-top:44px; border-top:1px solid rgba(255,255,255,.25); padding-top:16px;
+    display:flex; justify-content:space-between; font-size:11px; color:rgba(255,255,255,.85); }
+  .cover-icons{ display:flex; gap:14px; margin-top:30px; }
+  .cover-icons div{ background:#fff; color:var(--g700); border-radius:14px; width:88px; min-height:82px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+    font-size:9.4px; font-weight:700; text-align:center; box-shadow:0 8px 18px rgba(0,0,0,.22); padding:6px; }
+  .cover-icons div span{ font-size:24px; }
+
+  /* ============ STRUKTUR ============ */
+  .kicker{ color:var(--g600); font-weight:800; font-size:10px; letter-spacing:2px; text-transform:uppercase; }
+  h2.bab{ font-size:22px; margin:4px 0 6px; }
+  .lead{ color:var(--muted); font-size:12px; margin-bottom:14px; }
+  .bab-head{ background:linear-gradient(135deg,var(--g900),var(--g600)); color:#fff; border-radius:12px;
+    padding:15px 20px; margin-bottom:16px; display:flex; gap:14px; align-items:center; }
+  .bab-head .no{ width:44px; height:44px; border-radius:12px; background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.35); display:grid; place-items:center; font-size:20px; font-weight:800; flex:0 0 44px; }
+  .bab-head h2{ color:#fff; font-size:19px; }
+  .bab-head p{ font-size:11.4px; color:rgba(255,255,255,.88); }
+
+  h3{ font-size:13.4px; margin:14px 0 6px; color:var(--g700); }
+  h4{ font-size:11.8px; margin:10px 0 4px; }
+  p{ margin-bottom:7px; }
+  ul,ol{ margin:0 0 9px 18px; }
+  li{ margin-bottom:3px; }
+
+  .card{ background:#fff; border:1px solid var(--line); border-radius:11px; padding:13px 15px; margin-bottom:11px; }
+  .card.tint{ background:#f2f8f7; }
+  .two{ display:grid; grid-template-columns:1fr 1fr; gap:11px; }
+  .three{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:11px; }
+  .four{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+
+  .tip,.warn,.danger{ border-radius:0 9px 9px 0; padding:9px 12px; margin:9px 0; font-size:11px; }
+  .tip{ background:#E8F5E9; border-left:4px solid #4CAF50; color:#1b5e20; }
+  .warn{ background:#FFF6E0; border-left:4px solid var(--amber); color:#6b4e00; }
+  .danger{ background:#FDECEA; border-left:4px solid var(--red); color:#8c1d16; }
+  .tip b,.warn b,.danger b{ display:inline-block; }
+
+  /* terminal */
+  .term{ background:#0f1b1a; border-radius:9px; overflow:hidden; margin:8px 0 11px; }
+  .term .bar{ background:#1d2f2d; padding:5px 10px; display:flex; gap:5px; align-items:center; }
+  .term .bar i{ width:9px; height:9px; border-radius:50%; display:inline-block; }
+  .term .bar span{ color:#8fb3ae; font-size:9.4px; margin-left:6px; font-family:Consolas,monospace; }
+  .term pre{ padding:10px 12px; color:#d9f2ec; font-family:Consolas,'Courier New',monospace;
+    font-size:10.6px; line-height:1.6; white-space:pre-wrap; word-break:break-word; }
+  .term pre .c{ color:#7fd8a5; } /* command */
+  .term pre .o{ color:#9fb6b3; } /* output */
+  .term pre .k{ color:#ffd766; } /* highlight */
+
+  code.inline{ background:#eef5f4; border:1px solid #dcebe8; padding:0 4px; border-radius:4px;
+    color:var(--g700); font-weight:700; font-size:10.6px; }
+
+  /* langkah bernomor */
+  .step{ display:flex; gap:11px; margin-bottom:11px; break-inside:avoid; }
+  .step .n{ flex:0 0 26px; height:26px; border-radius:50%; background:var(--g700); color:#fff;
+    display:grid; place-items:center; font-weight:800; font-size:12px; box-shadow:0 3px 8px rgba(7,94,84,.3); }
+  .step .body{ flex:1; }
+  .step .body h4{ margin:3px 0 3px; }
+
+  /* mockup browser */
+  .mock{ border:1px solid #cfdad8; border-radius:9px; overflow:hidden; margin:8px 0 11px; break-inside:avoid; }
+  .mock .chrome{ background:#e9eeed; padding:5px 9px; display:flex; align-items:center; gap:6px; border-bottom:1px solid #d5dedc; }
+  .mock .chrome i{ width:8px; height:8px; border-radius:50%; background:#c3cecc; }
+  .mock .url{ background:#fff; border-radius:5px; font-size:9.3px; color:#5b6b6a; padding:2px 8px; flex:1; font-family:Consolas,monospace; }
+  .mock .screen{ display:flex; min-height:96px; background:#fff; }
+  .mock .side{ width:34%; background:#f7f9f9; border-right:1px solid #e6eceb; padding:8px 7px; font-size:9.8px; }
+  .mock .side .item{ padding:3px 6px; border-radius:5px; color:#41524f; margin-bottom:2px; }
+  .mock .side .item.on{ background:#d7f0e9; color:#045248; font-weight:700; }
+  .mock .side .hd{ font-size:8.8px; text-transform:uppercase; letter-spacing:1px; color:#8b9a98; margin:5px 0 3px; }
+  .mock .main{ flex:1; padding:9px 11px; font-size:10.4px; }
+  .mock .main .btn{ display:inline-block; background:var(--blue); color:#fff; padding:4px 11px;
+    border-radius:5px; font-size:10px; font-weight:700; margin-bottom:6px; }
+  .mock .main .btn.ghost{ background:#fff; color:var(--blue); border:1px solid var(--blue); }
+  .mock .main .row{ height:8px; background:#eef2f1; border-radius:4px; margin-bottom:5px; }
+  .callout{ display:flex; gap:6px; align-items:flex-start; font-size:10px; color:#8c1d16; background:#FDECEA;
+    border-radius:6px; padding:5px 8px; margin-top:4px; }
+
+  /* tabel */
+  table{ width:100%; border-collapse:collapse; font-size:10.6px; margin:7px 0 11px; break-inside:avoid; }
+  th{ background:var(--g700); color:#fff; text-align:left; padding:6px 9px; font-size:10.4px; }
+  td{ padding:6px 9px; border:1px solid var(--line); vertical-align:top; }
+  tr:nth-child(even) td{ background:#f7fbfa; }
+
+  /* roadmap */
+  .road{ display:grid; grid-template-columns:repeat(4,1fr); gap:9px; margin:10px 0 4px; }
+  .road .r{ background:#fff; border:1.5px solid var(--line); border-radius:11px; padding:11px 10px; text-align:center; }
+  .road .r .ic{ font-size:23px; }
+  .road .r b{ display:block; font-size:11.2px; color:var(--g700); margin:5px 0 3px; }
+  .road .r span{ font-size:9.7px; color:var(--muted); }
+
+  /* checklist */
+  .check{ background:#fff; border:1px solid var(--line); border-radius:10px; padding:11px 14px; margin-bottom:9px; break-inside:avoid; }
+  .check li{ list-style:none; position:relative; padding-left:22px; margin-bottom:5px; font-size:11px; }
+  .check li::before{ content:"✓"; position:absolute; left:0; top:0; width:15px; height:15px; border-radius:4px;
+    background:#4CAF50; color:#fff; font-size:10px; display:grid; place-items:center; font-weight:700; }
+
+  /* hasil akhir */
+  .shots{ display:grid; grid-template-columns:repeat(3,1fr); gap:11px; break-inside:avoid; }
+  .shots figure{ margin:0; }
+  .shots .fr{ border:4px solid #12211f; border-radius:16px; overflow:hidden; box-shadow:0 6px 16px rgba(0,0,0,.16); }
+  .shots img{ width:100%; display:block; }
+  .shots figcaption{ font-size:9.7px; color:var(--muted); text-align:center; margin-top:5px; }
+
+  .toc{ background:#f2f8f7; border:1px solid var(--line); border-radius:12px; padding:15px 20px; }
+  .toc div{ display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px dotted #cfdad8; font-size:11.6px; }
+  .toc div:last-child{ border:none; }
+  .toc b{ color:var(--g700); }
+
+  .arch{ background:#f7fbfa; border:1px solid var(--line); border-radius:12px; padding:12px; break-inside:avoid; }
+  .foot-note{ font-size:9.6px; color:#8b9a98; text-align:center; margin-top:14px; }
+  .tag{ display:inline-block; background:#e6f4f1; color:var(--g700); border:1px solid #cfe6e1;
+    border-radius:6px; padding:1px 7px; font-size:9.6px; font-weight:700; }
+  .no{ break-inside:avoid; }
+</style>
+</head>
+<body>
+
+<!-- ================= COVER ================= -->
+<div class="cover">
+  <div class="brand"><span class="logo">&#128214;</span> BUKU PENGHUBUNG DIGITAL &nbsp;·&nbsp; SD NEGERI SEMAMBUNG</div>
+
+  <h1>Panduan Lengkap<br><span>Instalasi Firebase &amp; Cloudflare</span></h1>
+  <div class="sub">Langkah demi langkah untuk pemula — dari nol sampai aplikasi bisa dipakai wali murid,
+    lengkap dengan gambar ilustrasi, perintah siap salin, dan daftar periksa akhir.</div>
+
+  <div class="badges">
+    <b>&#128241; Untuk Pemula</b> <b>&#9989; Praktis</b> <b>&#128206; Bergambar</b> <b>&#128176; Biaya $0 / bulan</b>
+  </div>
+
+  <div class="cover-icons">
+    <div><span>&#128640;</span>FIREBASE<br>Database &amp; Hosting</div>
+    <div><span>&#9729;&#65039;</span>CLOUDFLARE<br>Penyimpanan Media</div>
+    <div><span>&#128241;</span>ANDROID<br>APK untuk HP</div>
+    <div><span>&#127968;</span>SEKOLAH<br>Siap Dipakai</div>
+  </div>
+
+  <div class="meta">
+    <span>Versi Panduan 1.0 &nbsp;·&nbsp; Aplikasi v1.6</span>
+    <span>Kelas III &nbsp;·&nbsp; Tahun Ajaran 2026/2027</span>
+  </div>
+</div>
+
+<!-- ================= DAFTAR ISI ================= -->
+<div class="page-break"></div>
+<div class="kicker">Mulai dari sini</div>
+<h2 class="bab">Daftar Isi</h2>
+<p class="lead">Panduan ini disusun berurutan. Kerjakan satu bab, selesai, lalu lanjut ke bab berikutnya.</p>
+
+<div class="toc">
+  <div><span><b>Bab 1</b> &nbsp;Kenali Arsitektur &amp; Peta Jalan</span><span>hal. 3</span></div>
+  <div><span><b>Bab 2</b> &nbsp;Persiapan: Software &amp; Berkas yang Dibutuhkan</span><span>hal. 4</span></div>
+  <div><span><b>Bab 3</b> &nbsp;Firebase — Buat Project, Database, dan Hosting</span><span>hal. 5</span></div>
+  <div><span><b>Bab 4</b> &nbsp;Cloudflare R2 — Penyimpanan Foto, Video &amp; PDF</span><span>hal. 10</span></div>
+  <div><span><b>Bab 5</b> &nbsp;Build APK Android untuk HP Wali Murid</span><span>hal. 12</span></div>
+  <div><span><b>Bab 6</b> &nbsp;Daftar Periksa Akhir &amp; Uji Coba Dua HP</span><span>hal. 13</span></div>
+  <div><span><b>Bab 7</b> &nbsp;Masalah Umum &amp; Cara Mengatasinya</span><span>hal. 14</span></div>
+  <div><span><b>Bab 8</b> &nbsp;Biaya, Pertanyaan Umum, dan Penutup</span><span>hal. 15</span></div>
+</div>
+
+<div class="card tint" style="margin-top:14px">
+  <h3 style="margin-top:0">&#128161; Siapa yang membutuhkan panduan ini?</h3>
+  <p>Panduan ini ditujukan untuk <b>guru, operator sekolah, atau siapa pun</b> yang akan memasang ulang
+  aplikasi <b>Buku Penghubung Digital</b> di server milik sendiri — misalnya pindah ke sekolah lain,
+  ganti tahun ajaran, atau membangun dari berkas sumber yang baru diunduh.</p>
+  <p style="margin-bottom:0">Anda <b>tidak perlu bisa pemrograman</b>. Cukup ikuti langkah, salin perintah yang
+  tersedia, dan perhatikan gambar ilustrasi.</p>
+</div>
+
+<div class="tip"><b>&#9989; Aturan main:</b> kerjakan Bab 3 (Firebase) dulu sampai selesai &mdash; aplikasi sudah
+bisa dipakai dari browser. Bab 4 (Cloudflare) dan Bab 5 (APK) bersifat lanjutan, boleh dikerjakan belakangan.</div>
+
+<!-- ================= BAB 1 ================= -->
+<div class="page-break"></div>
+<div class="bab-head">
+  <div class="no">1</div>
+  <div>
+    <h2>Kenali Arsitektur &amp; Peta Jalan</h2>
+    <p>Ke mana file aplikasi pergi, dan layanan apa yang bekerja di belakang layar.</p>
+  </div>
+</div>
+
+<p>Aplikasi ini terdiri dari <b>tiga bagian</b> yang saling terhubung lewat internet. Sebelum memasang,
+pahami dulu gambar besar ini supaya Anda tahu setiap langkah sedang mengerjakan apa.</p>
+
+<!-- ARSITEKTUR -->
+<div class="arch">
+<svg viewBox="0 0 700 300" width="100%" height="260" font-family="Segoe UI, Arial" font-size="12">
+  <defs>
+    <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 z" fill="#128C7E"/>
+    </marker>
+  </defs>
+
+  <!-- pengguna -->
+  <rect x="14" y="70" width="150" height="150" rx="12" fill="#ffffff" stroke="#cfdad8"/>
+  <text x="89" y="94" text-anchor="middle" font-weight="700" fill="#064e45">PENGGUNA</text>
+  <rect x="30" y="106" width="118" height="34" rx="7" fill="#e6f4f1" stroke="#bcdcd6"/>
+  <text x="89" y="127" text-anchor="middle" font-size="11" fill="#075E54">&#128241; APK Android</text>
+  <rect x="30" y="148" width="118" height="34" rx="7" fill="#e6f4f1" stroke="#bcdcd6"/>
+  <text x="89" y="169" text-anchor="middle" font-size="11" fill="#075E54">&#127760; Browser HP/Laptop</text>
+  <text x="89" y="204" text-anchor="middle" font-size="10.5" fill="#5b6b6a">Guru &amp; 22 Wali Murid</text>
+
+  <!-- arrow ke hosting -->
+  <line x1="166" y1="145" x2="214" y2="145" stroke="#128C7E" stroke-width="2.4" marker-end="url(#ar)"/>
+  <text x="190" y="136" text-anchor="middle" font-size="10" fill="#128C7E">HTTPS</text>
+
+  <!-- firebase -->
+  <rect x="218" y="34" width="216" height="224" rx="12" fill="#fff8e6" stroke="#f0d68a"/>
+  <text x="326" y="58" text-anchor="middle" font-weight="700" fill="#8a6500">FIREBASE (Google)</text>
+  <rect x="234" y="72" width="184" height="52" rx="8" fill="#ffffff" stroke="#e3d9b8"/>
+  <text x="326" y="93" text-anchor="middle" font-size="11" font-weight="700" fill="#064e45">Hosting</text>
+  <text x="326" y="110" text-anchor="middle" font-size="10" fill="#5b6b6a">nama-project.web.app</text>
+  <rect x="234" y="134" width="184" height="64" rx="8" fill="#ffffff" stroke="#e3d9b8"/>
+  <text x="326" y="155" text-anchor="middle" font-size="11" font-weight="700" fill="#064e45">Realtime Database</text>
+  <text x="326" y="172" text-anchor="middle" font-size="10" fill="#5b6b6a">chat &middot; absensi &middot; izin</text>
+  <text x="326" y="187" text-anchor="middle" font-size="10" fill="#5b6b6a">data murid &middot; pengumuman</text>
+  <rect x="234" y="208" width="184" height="36" rx="8" fill="#ffffff" stroke="#e3d9b8"/>
+  <text x="326" y="231" text-anchor="middle" font-size="11" font-weight="700" fill="#064e45">Storage (cadangan)</text>
+
+  <!-- arrow ke cloudflare -->
+  <line x1="436" y1="145" x2="484" y2="145" stroke="#128C7E" stroke-width="2.4" marker-end="url(#ar)"/>
+  <text x="460" y="136" text-anchor="middle" font-size="10" fill="#128C7E">upload</text>
+
+  <!-- cloudflare -->
+  <rect x="488" y="66" width="198" height="158" rx="12" fill="#eaf3ff" stroke="#a9c6f0"/>
+  <text x="587" y="90" text-anchor="middle" font-weight="700" fill="#1a4c8f">CLOUDFLARE</text>
+  <rect x="504" y="104" width="166" height="44" rx="8" fill="#ffffff" stroke="#cfe0f7"/>
+  <text x="587" y="123" text-anchor="middle" font-size="11" font-weight="700" fill="#064e45">Worker</text>
+  <text x="587" y="139" text-anchor="middle" font-size="10" fill="#5b6b6a">bpd-upload-media</text>
+  <rect x="504" y="158" width="166" height="52" rx="8" fill="#ffffff" stroke="#cfe0f7"/>
+  <text x="587" y="178" text-anchor="middle" font-size="11" font-weight="700" fill="#064e45">R2 Bucket</text>
+  <text x="587" y="195" text-anchor="middle" font-size="10" fill="#5b6b6a">foto &middot; video &middot; audio &middot; PDF</text>
+
+  <text x="350" y="284" text-anchor="middle" font-size="10.5" fill="#5b6b6a">Firebase = "otak &amp; tampilan" &nbsp;&nbsp;|&nbsp;&nbsp; Cloudflare = "lemari arsip file besar"</text>
+</svg>
+</div>
+
+<div class="two" style="margin-top:12px">
+  <div class="card">
+    <h3 style="margin-top:0">&#128640; Bab 3 &mdash; Firebase <span class="tag">WAJIB</span></h3>
+    <p style="margin-bottom:0">Mengaktifkan database (chat, absensi, izin), mengisi konfigurasi, dan
+    menerbitkan aplikasi ke alamat <code class="inline">…web.app</code> supaya bisa dibuka dari browser.</p>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">&#9729;&#65039; Bab 4 &mdash; Cloudflare <span class="tag">PILIHAN</span></h3>
+    <p style="margin-bottom:0">Menyediakan tempat file besar (foto/video/PDF) supaya tidak membebani kuota
+    Firebase. Gratis 10 GB + unduhan tanpa batas.</p>
+  </div>
+</div>
+
+<div class="road">
+  <div class="r"><div class="ic">&#128295;</div><b>1. Persiapan</b><span>Install Node.js &amp; CLI</span></div>
+  <div class="r"><div class="ic">&#128640;</div><b>2. Firebase</b><span>Database + Hosting</span></div>
+  <div class="r"><div class="ic">&#9729;&#65039;</div><b>3. Cloudflare</b><span>Media &amp; lampiran</span></div>
+  <div class="r"><div class="ic">&#128241;</div><b>4. APK</b><span>Untuk HP wali murid</span></div>
+</div>
+
+<!-- ================= BAB 2 ================= -->
+<div class="page-break"></div>
+<div class="bab-head">
+  <div class="no">2</div>
+  <div>
+    <h2>Persiapan</h2>
+    <p>Software, akun, dan berkas yang harus siap sebelum memulai.</p>
+  </div>
+</div>
+
+<h3>2.1 Perangkat &amp; software</h3>
+<table>
+  <tr><th style="width:26%">Kebutuhan</th><th style="width:26%">Versi / Pilihan</th><th>Cara mendapatkan</th></tr>
+  <tr><td>PC / Laptop</td><td>Windows 10 atau 11</td><td>Sudah dipakai sehari-hari, cukup</td></tr>
+  <tr><td>Koneksi internet</td><td>&mdash;</td><td>Wajib ada saat setup &amp; deploy</td></tr>
+  <tr><td>Node.js</td><td>Versi 18 atau lebih baru (LTS)</td><td><a href="https://nodejs.org">https://nodejs.org</a> &rarr; unduh LTS &rarr; Next sampai selesai</td></tr>
+  <tr><td>Firebase CLI</td><td>Versi terbaru</td><td>Buka Terminal/PowerShell, ketik <code class="inline">npm install -g firebase-tools</code></td></tr>
+  <tr><td>Akun Google</td><td>1 akun</td><td>Untuk login Firebase Console</td></tr>
+  <tr><td>Akun Cloudflare</td><td>1 akun (gratis)</td><td><a href="https://dash.cloudflare.com/sign-up">https://dash.cloudflare.com/sign-up</a></td></tr>
+  <tr><td>Android Studio + JDK 17</td><td>Opsional (Bab 5)</td><td><a href="https://developer.android.com/studio">https://developer.android.com/studio</a></td></tr>
+</table>
+
+<div class="term">
+  <div class="bar"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><span>PowerShell — cek apakah sudah terpasang</span></div>
+  <pre><span class="c">node -v</span>          <span class="o"># harus muncul v18.x atau v20.x</span>
+<span class="c">npm -v</span>           <span class="o"># harus muncul angka versi</span>
+<span class="c">firebase --version</span>  <span class="o"># kalau "tidak dikenal", jalankan install di bawah</span>
+<span class="c">npm install -g firebase-tools</span></pre>
+</div>
+
+<div class="tip"><b>&#128161; Tips pemula:</b> buka Terminal dengan cara klik kanan pada folder project &rarr;
+<b>Open in Terminal</b> (Windows 11) atau tekan <b>Win + R</b> &rarr; ketik <code class="inline">powershell</code> &rarr; Enter.</div>
+
+<h3>2.2 Berkas project</h3>
+<p>Siapkan folder project <b>buku-penghubung</b> (hasil unduh ZIP/RAR) di lokasi mudah, contoh:
+<code class="inline">D:\buku-penghubung</code>. Isinya kira-kira seperti ini:</p>
+
+<div class="term">
+  <div class="bar"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><span>Struktur folder project</span></div>
+  <pre>buku-penghubung\
+├── <span class="k">app\</span>              <span class="o">=&gt; kode aplikasi (web) yang di-deploy</span>
+│   ├── index.html
+│   ├── js\config.js   <span class="k">=&gt; BERKAS INI YANG KITA ISI</span>
+│   └── css\, icons\, models\
+├── <span class="k">android\</span>          <span class="o">=&gt; proyek Android untuk build APK</span>
+├── <span class="k">cloudflare\</span>        <span class="o">=&gt; worker.js + wrangler.toml</span>
+├── <span class="k">firebase\</span>          <span class="o">=&gt; aturan keamanan database &amp; storage</span>
+├── firebase.json      <span class="o">=&gt; konfigurasi deploy (public: "app")</span>
+├── .firebaserc        <span class="o">=&gt; nama project Firebase</span>
+├── <span class="k">PASANG-FIREBASE.bat</span> <span class="o">=&gt; KLIK 2x untuk isi config otomatis</span>
+└── build-release.bat  <span class="o">=&gt; build APK sekali jalan</span></pre>
+</div>
+
+<div class="warn"><b>&#9888;&#65039; Penting:</b> semua perintah di panduan ini dijalankan dari
+<b>folder induk</b> <code class="inline">buku-penghubung</code>, bukan dari dalam folder <code class="inline">app</code>.
+<code class="inline">firebase.json</code> harus berada sejajar dengan folder <code class="inline">app</code>.</div>
+
+<!-- ================= BAB 3 FIREBASE ================= -->
+<div class="page-break"></div>
+<div class="bab-head">
+  <div class="no">3</div>
+  <div>
+    <h2>Firebase — Database, Konfigurasi &amp; Hosting</h2>
+    <p>Bagian wajib. Setelah bab ini, aplikasi sudah bisa dibuka lewat browser.</p>
+  </div>
+</div>
+
+<div class="road" style="grid-template-columns:repeat(5,1fr)">
+  <div class="r"><div class="ic">&#128640;</div><b>3.1</b><span>Buat project</span></div>
+  <div class="r"><div class="ic">&#128202;</div><b>3.2</b><span>Aktifkan Database</span></div>
+  <div class="r"><div class="ic">&#128273;</div><b>3.3</b><span>Salin konfigurasi</span></div>
+  <div class="r"><div class="ic">&#128737;&#65039;</div><b>3.4</b><span>Aturan keamanan</span></div>
+  <div class="r"><div class="ic">&#127760;</div><b>3.5</b><span>Deploy hosting</span></div>
+</div>
+
+<!-- 3.1 -->
+<h3>3.1 &nbsp;Buat project Firebase</h3>
+<div class="step">
+  <div class="n">1</div>
+  <div class="body">
+    <h4>Buka Firebase Console</h4>
+    <p>Kunjungi <a href="https://console.firebase.google.com">https://console.firebase.google.com</a> lalu
+    login memakai akun Google Anda. Klik tombol besar <b>+ Add project</b> / <b>Create a project</b>.</p>
+  </div>
+</div>
+
+<div class="mock">
+  <div class="chrome"><i></i><i></i><i></i><div class="url">console.firebase.google.com</div></div>
+  <div class="screen">
+    <div class="side">
+      <div class="hd">Proyek Saya</div>
+      <div class="item">+ Add project</div>
+      <div class="item on">Your projects</div>
+      <div class="item">buku-penghubung-f579b</div>
+      <div class="hd">Akun</div>
+      <div class="item">Usage &amp; billing</div>
+    </div>
+    <div class="main">
+      <b style="font-size:11.5px;color:#064e45">Welcome to Firebase</b>
+      <div class="row" style="width:80%"></div>
+      <div class="row" style="width:60%"></div>
+      <div class="btn">+ Add project</div>
+      <div class="callout">&#128161; Klik tombol biru <b>+ Add project</b> untuk membuat proyek baru.</div>
+    </div>
+  </div>
+</div>
+
+<div class="step">
+  <div class="body">
+    <h4>Isi nama project</h4>
+    <p>Misal: <code class="inline">buku-penghubung-sekolahanda</code>. Lanjutkan (Google Analytics boleh
+    <b>dimatikan</b>), lalu tunggu sampai muncul tombol <b>Continue</b> / <b>Create project</b>.</p>
+    <div class="tip" style="margin-top:4px"><b>&#128204; Catat nama project</b> (contoh:
+    <code class="inline">buku-penghubung-abc12</code>) — nama ini dipakai pada alamat situs
+    <code class="inline">https://NAMA.web.app</code>.</div>
+  </div>
+</div>
+
+<!-- 3.2 -->
+<h3>3.2 &nbsp;Aktifkan Realtime Database &amp; Storage</h3>
+<div class="step">
+  <div class="n">1</div>
+  <div class="body">
+    <h4>Build &rarr; Realtime Database &rarr; Create Database</h4>
+    <p>Di menu kiri pilih <b>Build</b> &rarr; <b>Realtime Database</b> &rarr; klik <b>Create Database</b>.</p>
+  </div>
+</div>
+
+<div class="mock">
+  <div class="chrome"><i></i><i></i><i></i><div class="url">console.firebase.google.com/project/&lt;nama-project&gt;/database</div></div>
+  <div class="screen">
+    <div class="side">
+      <div class="hd">Build</div>
+      <div class="item">Authentication</div>
+      <div class="item on">Realtime Database</div>
+      <div class="item">Firestore Database</div>
+      <div class="item">Storage</div>
+      <div class="item">Hosting</div>
+      <div class="item">Functions</div>
+    </div>
+    <div class="main">
+      <b style="font-size:11.5px;color:#064e45">Realtime Database</b>
+      <div class="row" style="width:90%"></div>
+      <div class="btn">Create Database</div>
+      <div class="callout">&#9988;&#65039; Pilih lokasi <b>Singapore (asia-southeast1)</b> &rarr;
+      pilih <b>Start in test mode</b> &rarr; klik <b>Enable</b>.</div>
+    </div>
+  </div>
+</div>
+
+<div class="warn"><b>&#9888;&#65039; Jangan lewati langkah ini.</b> Kalau Realtime Database belum dibuat,
+aplikasi akan menampilkan error <i>"database not found"</i> walaupun konfigurasi sudah benar.
+Ulangi juga untuk <b>Storage</b> (Build &rarr; Storage &rarr; Get started) sebagai cadangan.</div>
+
+<div class="step">
+  <div class="n">2</div>
+  <div class="body">
+    <h4>Periksa alamat database</h4>
+    <p>Di halaman Realtime Database, salin alamat yang tertera di atas tabel data, bentuknya:</p>
+    <div class="term" style="margin-top:5px"><pre><span class="o">https://&lt;nama-project&gt;-default-rtdb.asia-southeast1.firebasedatabase.app</span></pre></div>
+    <p style="margin-bottom:0">Pastikan tulisannya <b>asia-southeast1</b> (singapura) — kalau salah wilayah,
+    data tidak akan tersambung.</p>
+  </div>
+</div>
+
+<!-- 3.3 -->
+<div class="page-break"></div>
+<h3>3.3 &nbsp;Salin konfigurasi &amp; isi <code class="inline">config.js</code></h3>
+<div class="step">
+  <div class="n">1</div>
+  <div class="body">
+    <h4>Ambil blok firebaseConfig</h4>
+    <p>Klik ikon <b>&#9881; Settings</b> (roda gigi, pojok kiri atas) &rarr; tab <b>General</b> &rarr;
+    gulir ke bagian <b>Your apps</b> &rarr; klik ikon web <b><code class="inline">&lt;/&gt;</code></b> &rarr;
+    beri nama (mis. <code class="inline">buku-penghubung</code>) &rarr; <b>Register app</b>.</p>
+    <p style="margin-bottom:0">Muncul blok kode <code class="inline">firebaseConfig</code> berisi
+    <b>apiKey</b>, <b>authDomain</b>, <b>databaseURL</b>, <b>projectId</b>, dll. <b>Salin semuanya.</b></p>
+  </div>
+</div>
+
+<div class="mock">
+  <div class="chrome"><i></i><i></i><i></i><div class="url">console.firebase.google.com/project/&lt;nama-project&gt;/settings/general</div></div>
+  <div class="screen">
+    <div class="side">
+      <div class="hd">Settings</div>
+      <div class="item on">General</div>
+      <div class="item">Cloud Messaging</div>
+      <div class="hd">Your apps</div>
+      <div class="item">&lt;/&gt; Web app</div>
+    </div>
+    <div class="main">
+      <b style="font-size:11.5px;color:#064e45">Your apps &mdash; SDK setup</b>
+      <div class="row" style="width:95%;height:44px;background:#0f1b1a"></div>
+      <div class="callout">&#128203; Blok <b>firebaseConfig</b> di atas yang harus Anda salin seluruhnya.</div>
+    </div>
+  </div>
+</div>
+
+<div class="step">
+  <div class="n">2</div>
+  <div class="body">
+    <h4>Tempel ke berkas <code class="inline">fb.txt</code></h4>
+    <p>Di folder project, buka (atau buat) berkas teks bernama <code class="inline">fb.txt</code> memakai Notepad,
+    lalu <b>tempel</b> hasil salinan tadi. Simpan dengan <b>Ctrl+S</b>.</p>
+  </div>
+</div>
+
+<div class="step">
+  <div class="n">3</div>
+  <div class="body">
+    <h4>Jalankan <code class="inline">PASANG-FIREBASE.bat</code></h4>
+    <p><b>Klik dua kali</b> berkas <code class="inline">PASANG-FIREBASE.bat</code> di folder project.
+    Skrip akan membaca <code class="inline">fb.txt</code> lalu:</p>
+    <ul>
+      <li>mengisi <code class="inline">app\js\config.js</code> secara otomatis (tanpa salah ketik),</li>
+      <li>menyalin seluruh folder <code class="inline">app\</code> ke <code class="inline">android\app\src\main\assets\www\</code>,</li>
+      <li>menampilkan nilai yang terpasang untuk Anda periksa.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="term">
+  <div class="bar"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><span>keluaran yang diharapkan</span></div>
+  <pre><span class="c">MEMASANG KONFIGURASI FIREBASE</span>
+<span class="o">  Membaca fb.txt ...</span>
+<span class="o">  [OK] app/js/config.js diperbarui</span>
+<span class="o">  [OK] app/* disalin ke android/.../assets/www/</span>
+<span class="o">  apiKey     : AIzaSy........................</span>
+<span class="o">  databaseURL: https://.....asia-southeast1...</span>
+<span class="o">  SELESAI. Tutup jendela ini.</span></pre>
+</div>
+
+<div class="step">
+  <div class="n">4</div>
+  <div class="body">
+    <h4>Periksa <code class="inline">databaseURL</code></h4>
+    <p>Nilai ini <b>sering tidak ikut</b> di blok konfigurasi. Buka <code class="inline">app\js\config.js</code>,
+    pastikan barisnya lengkap dan wilayahnya benar:</p>
+    <div class="term" style="margin-top:5px"><pre><span class="c">databaseURL</span>: <span class="k">"https://&lt;nama-project&gt;-default-rtdb.asia-southeast1.firebasedatabase.app"</span>,</pre></div>
+    <p style="margin-bottom:0">Kalau berbeda, betulkan manual lalu salin ulang folder app ke assets/www.</p>
+  </div>
+</div>
+
+<div class="tip"><b>&#128270; Tanda berhasil:</b> buka aplikasi &mdash; tulisan
+<b>"MODE DEMO"</b> di bagian atas harus <b>hilang</b>. Kalau masih muncul, berarti
+<code class="inline">apiKey</code> atau <code class="inline">databaseURL</code> masih kosong: ulangi langkah 3.3.</div>
+
+<!-- 3.4 -->
+<h3>3.4 &nbsp;Pasang aturan keamanan</h3>
+<p>Database masih dalam <b>test mode</b> (terbuka untuk semua orang) dan akan <b>kedaluwarsa dalam 30 hari</b>.
+Setelah lewat, semua akses ditolak dan aplikasi berhenti bekerja. Aturan sudah disiapkan di folder
+<code class="inline">firebase\</code>.</p>
+
+<div class="term">
+  <div class="bar"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><span>PowerShell — di folder induk project</span></div>
+  <pre><span class="c">firebase login</span>                    <span class="o"># sekali saja, ikuti petunjuk di browser</span>
+<span class="c">firebase deploy --only database,storage</span></pre>
+</div>
+
+<p><b>Cara manual</b> (tanpa terminal): buka Realtime Database &rarr; tab <b>Rules</b> &rarr; tempel isi
+<code class="inline">firebase\database.rules.json</code> &rarr; klik <b>Publish</b>. Ulangi untuk
+<b>Storage</b> dengan <code class="inline">firebase\storage.rules</code>.</p>
+
+<div class="warn"><b>&#9888;&#65039;</b> Aturan bawaan memuat node <code class="inline">pengaturan</code>
+yang dipakai fitur <i>Hari Efektif &amp; Libur</i>. Pakai berkas yang disediakan, jangan aturan lama.</div>
+
+<!-- 3.5 -->
+<h3>3.5 &nbsp;Deploy (terbitkan) ke Firebase Hosting</h3>
+<div class="term">
+  <div class="bar"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><span>PowerShell — dari folder induk project</span></div>
+  <pre><span class="c">firebase deploy --only hosting</span>
+
+<span class="o">found 14 files in app</span>
+<span class="o">hosting[buku-penghubung-f579b]: file upload finished</span>
+<span class="o">hosting[buku-penghubung-f579b]: https://&lt;nama-project&gt;.web.app  COMPLETE ✓</span></pre>
+</div>
+
+<div class="three">
+  <div class="card no">
+    <h4 style="margin-top:0">&#9989; Harus muncul</h4>
+    <p style="margin-bottom:0"><code class="inline">found 14 files in app</code><br>
+    Artinya hanya isi folder <code class="inline">app</code> yang diunggah.</p>
+  </div>
+  <div class="card no">
+    <h4 style="margin-top:0">&#10060; Salah umum</h4>
+    <p style="margin-bottom:0"><code class="inline">found 78 files in .</code><br>
+    <code class="inline">firebase.json</code> masih memakai <code class="inline">"public": "."</code>.</p>
+  </div>
+  <div class="card no">
+    <h4 style="margin-top:0">&#9988;&#65039; Saat init</h4>
+    <p style="margin-bottom:0">Kalau ditanya <i>"index.html already exists. Overwrite?"</i> jawab
+    <b>No</b> — kalau terlanjur Yes, tampilan aplikasi hilang.</p>
+  </div>
+</div>
+
+<div class="tip"><b>&#128161; Isi <code class="inline">firebase.json</code> yang benar</b> (sudah tersedia di
+project, pastikan <code class="inline">public</code> menunjuk folder <code class="inline">app</code>):</div>
+<div class="term">
+  <div class="bar"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><span>firebase.json</span></div>
+  <pre>{
+  <span class="k">"database"</span>: { "rules": "firebase/database.rules.json" },
+  <span class="k">"storage"</span>:  { "rules": "firebase/storage.rules" },
+  <span class="k">"hosting"</span>:  { "public": <span class="c">"app"</span>, "ignore": ["**/.*", "**/node_modules/**"] }
+}</pre>
+</div>
+
+<div class="page-break"></div>
+<h3>3.6 &nbsp;Uji coba dari dua HP</h3>
+<div class="two">
+  <div class="card">
+    <h4 style="margin-top:0">HP A &mdash; Wali Murid</h4>
+    <ol style="margin-bottom:0">
+      <li>Buka <code class="inline">&lt;nama-project&gt;.web.app</code></li>
+      <li>Pilih nama anak &rarr; masukkan <b>NIS</b></li>
+      <li>Klik <b>MASUK</b></li>
+      <li>Kirim satu pesan ke guru</li>
+    </ol>
+  </div>
+  <div class="card">
+    <h4 style="margin-top:0">HP B &mdash; Guru / Admin</h4>
+    <ol style="margin-bottom:0">
+      <li>Buka alamat yang sama</li>
+      <li>Klik <b>Login Admin</b> &rarr; masukkan kata sandi admin</li>
+      <li>Pilih nama murid tadi</li>
+      <li>Pesan harus <b>muncul tanpa refresh</b></li>
+    </ol>
+  </div>
+</div>
+
+<table>
+  <tr><th style="width:6%">No</th><th>Uji coba</th><th style="width:36%">Tanda berhasil</th></tr>
+  <tr><td>1</td><td>Kirim pesan dari HP A</td><td>Muncul real-time di HP B</td></tr>
+  <tr><td>2</td><td>Kirim surat izin dari HP A</td><td>Presensi hari itu berubah jadi I / S</td></tr>
+  <tr><td>3</td><td>Lampirkan foto dari HP A</td><td>Foto tampil &amp; bisa dibuka besar</td></tr>
+  <tr><td>4</td><td>Cek Firebase Console &rarr; Realtime Database</td><td>Node <code class="inline">chats</code>, <code class="inline">izin</code>, <code class="inline">absensi</code> bertambah</td></tr>
+</table>
+
+<div class="shots">
+  <figure>
+    <div class="fr"><img src="img/03-pesan.png" alt="Tampilan menu pesan"></div>
+    <figcaption>Tampilan setelah berhasil deploy &amp; login</figcaption>
+  </figure>
+  <figure>
+    <div class="fr"><img src="img/06-absensi.png" alt="Tampilan rekap absensi"></div>
+    <figcaption>Rekap absensi dari database</figcaption>
+  </figure>
+  <figure>
+    <div class="fr"><img src="img/07-info.png" alt="Tampilan menu info"></div>
+    <figcaption>Menu info &amp; kontak guru</figcaption>
+  </figure>
+</div>
+
+<!-- ================= BAB 4 CLOUDFLARE ================= -->
+<div class="page-break"></div>
+<div class="bab-head">
+  <div class="no">4</div>
+  <div>
+    <h2>Cloudflare R2 — Penyimpanan Media</h2>
+    <p>Tempat file foto, video, audio, dan PDF. Opsional, tapi sangat disarankan.</p>
+  </div>
+</div>
+
+<div class="two">
+  <div class="card tint">
+    <h3 style="margin-top:0">Mengapa perlu Cloudflare?</h3>
+    <ul style="margin-bottom:0">
+      <li><b>Gratis</b>: 10 GB penyimpanan</li>
+      <li>Unduhan (egress) <b>tanpa batas &amp; gratis</b></li>
+      <li>1 juta operasi tulis + 10 juta baca per bulan</li>
+      <li>Worker 100 ribu request per hari</li>
+    </ul>
+  </div>
+  <div class="card tint">
+    <h3 style="margin-top:0">Alur singkat</h3>
+    <p style="font-family:Consolas,monospace;font-size:10.6px;line-height:1.7;margin-bottom:0">
+      HP (upload) &rarr; <b>Worker</b> (validasi)<br>
+      &rarr; <b>R2</b> (simpan file)<br>
+      &rarr; URL file dibagikan ke chat</p>
+  </div>
+</div>
+
+<div class="step">
+  <div class="n">1</div>
+  <div class="body"><h4>Buat akun Cloudflare</h4>
+  <p>Buka <a href="https://dash.cloudflare.com/sign-up">https://dash.cloudflare.com/sign-up</a> &rarr;
+  daftar dengan email &rarr; verifikasi email.</p></div>
+</div>
+
+<div class="step">
+  <div class="n">2</div>
+  <div class="body"><h4>Buat R2 Bucket</h4>
+  <p>Login &rarr; di menu kiri pilih <b>R2</b> &rarr; <b>Create bucket</b>.</p>
+  <ul>
+    <li><b>Bucket name</b>: <code class="inline">bpd-media</code> (harus sama dengan isi <code class="inline">wrangler.toml</code>)</li>
+    <li><b>Location</b>: terdekat &mdash; misal <b>APAC / Singapore</b></li>
+    <li><b>Storage class</b>: Standard</li>
+  </ul>
+  </div>
+</div>
+
+<div class="step">
+  <div class="n">3</div>
+  <div class="body"><h4>Aktifkan Public Access</h4>
+  <p>Pada bucket &rarr; tab <b>Settings</b> &rarr; bagian <b>Public access</b> &rarr; <b>Allow Access</b>
+  &rarr; centang <b>Allow public access</b>.</p>
+  <div class="tip" style="margin-top:4px"><b>&#128204; Catat URL publik</b> yang muncul, contoh:
+  <code class="inline">https://pub-xxxxx.r2.dev</code> — dipakai di langkah 6.</div>
+  </div>
+</div>
+
+<div class="step">
+  <div class="n">4</div>
+  <div class="body"><h4>Buat API Token</h4>
+  <p>Di halaman R2 klik <b>Manage R2 API Tokens</b> &rarr; <b>Create API token</b>:</p>
+  <ul>
+    <li><b>Token name</b>: <code class="inline">bpd-upload</code></li>
+    <li><b>Permissions</b>: <b>Object Read &amp; Write</b></li>
+    <li><b>Specify bucket</b>: pilih bucket <code class="inline">bpd-media</code></li>
+  </ul>
+  <p style="margin-bottom:0">Klik <b>Create API Token</b> lalu <b>catat</b> Access Key ID, Secret Access Key,
+  dan Endpoint — <b>hanya muncul sekali</b>.</p>
+  </div>
+</div>
+
+<div class="page-break"></div>
+<div class="step">
+  <div class="n">5</div>
+  <div class="body"><h4>Install &amp; login Wrangler</h4>
+  <p>Wrangler adalah alat resmi Cloudflare untuk mengirim Worker ke internet.</p>
+  </div>
+</div>
+<div class="term">
+  <div class="bar"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><span>PowerShell</span></div>
+  <pre><span class="c">npm install -g wrangler</span>     <span class="o"># atau tanpa install: npx wrangler</span>
+<span class="c">npx wrangler login</span>          <span class="o"># browser terbuka &rarr; klik Allow</span>
+<span class="c">node -v</span>                     <span class="o"># minimal v18</span></pre>
+</div>
+
+<div class="step">
+  <div class="n">6</div>
+  <div class="body"><h4>Isi secret <code class="inline">PUBLIC_DOMAIN</code></h4>
+  <p>Worker butuh tahu alamat publik bucket untuk membuat URL file.</p>
+  </div>
+</div>
+<div class="term">
+  <div class="bar"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><span>PowerShell — masuk ke folder cloudflare dulu</span></div>
+  <pre><span class="c">cd cloudflare</span>
+<span class="c">npx wrangler secret put PUBLIC_DOMAIN</span>
+
+<span class="o">? Enter value: </span><span class="k">https://pub-xxxxx.r2.dev</span>   <span class="o">&lt;- paste URL hasil langkah 3</span></pre>
+</div>
+
+<div class="step">
+  <div class="n">7</div>
+  <div class="body"><h4>Deploy Worker</h4>
+  </div>
+</div>
+<div class="term">
+  <div class="bar"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><span>PowerShell</span></div>
+  <pre><span class="c">npx wrangler deploy</span>
+
+<span class="o">Uploaded bpd-upload-media</span>
+<span class="o">Deployed bpd-upload-media triggers</span>
+<span class="o">  https://bpd-upload-media.&lt;username&gt;.workers.dev  ✓</span></pre>
+</div>
+
+<div class="tip"><b>&#128204; Catat URL Worker</b> (bentuk <code class="inline">….workers.dev</code>) —
+URL ini yang dimasukkan ke aplikasi pada langkah berikutnya.</div>
+
+<div class="step">
+  <div class="n">8</div>
+  <div class="body">
+    <h4>Sambungkan ke aplikasi (<code class="inline">app/js/config.js</code>)</h4>
+    <p>Buka berkas <code class="inline">app\js\config.js</code>, cari bagian <code class="inline">R2_CONFIG</code>,
+    lalu ganti isinya:</p>
+  </div>
+</div>
+<div class="term">
+  <div class="bar"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><span>app/js/config.js</span></div>
+  <pre><span class="k">var R2_CONFIG</span> = {
+  workerUrl : <span class="c">"https://bpd-upload-media.&lt;username&gt;.workers.dev"</span>,
+  publicUrl : <span class="c">"https://pub-xxxxx.r2.dev"</span>,
+  enabled   : <span class="k">true</span>
+};</pre>
+</div>
+
+<div class="step">
+  <div class="n">9</div>
+  <div class="body">
+    <h4>Deploy ulang &amp; uji upload</h4>
+    <p>Perubahan config belum aktif sampai diunggah ulang:</p>
+    <div class="term" style="margin-top:5px"><pre><span class="c">firebase deploy --only hosting</span></pre></div>
+    <p style="margin-bottom:0"><b>Uji:</b> login sebagai <b>guru</b> &rarr; buka chat salah satu murid &rarr;
+    klik &#128206; &rarr; pilih <b>Gambar</b> &rarr; tunggu sampai tampil di chat. Selesai! &#9989;</p>
+  </div>
+</div>
+
+<!-- ================= BAB 5 APK ================= -->
+<div class="page-break"></div>
+<div class="bab-head">
+  <div class="no">5</div>
+  <div>
+    <h2>Build APK Android</h2>
+    <p>Menghasilkan berkas <code style="color:#ffd766">.apk</code> yang di-install di HP wali murid.</p>
+  </div>
+</div>
+
+<h3>5.1 Persiapan</h3>
+<ul>
+  <li>Install <b>Android Studio</b> (<a href="https://developer.android.com/studio">developer.android.com/studio</a>)</li>
+  <li>Install <b>JDK 17</b> (ikut terpasang bersama Android Studio)</li>
+  <li>Buka Android Studio sekali sampai selesai &amp; setuju dengan lisensi</li>
+</ul>
+
+<h3>5.2 Jalankan build</h3>
+<p><b>Cara termudah:</b> klik dua kali berkas <code class="inline">build-release.bat</code> di folder project.
+Skrip mencari Android SDK otomatis lalu menjalankan build.</p>
+
+<p><b>Cara manual lewat terminal:</b></p>
+<div class="term">
+  <div class="bar"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><span>PowerShell</span></div>
+  <pre><span class="c">cd android</span>
+<span class="c">.\gradlew.bat assembleRelease</span>
+
+<span class="o">BUILD SUCCESSFUL in 2m 14s</span></pre>
+</div>
+
+<h3>5.3 Di mana hasilnya?</h3>
+<div class="term">
+  <div class="bar"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><span>lokasi berkas APK</span></div>
+  <pre>android\app\build\outputs\apk\release\
+   └── <span class="k">app-release.apk</span>   <span class="o">(salin &amp; ganti nama, mis. ...-v1.6-release.apk)</span></pre>
+</div>
+
+<div class="two">
+  <div class="card">
+    <h4 style="margin-top:0">&#128204; Supaya APK bisa dipasang</h4>
+    <p style="margin-bottom:0">Build release harus <b>ditandatangani (signed)</b>. Buat berkas
+    <code class="inline">android\keystore.properties</code> lalu build ulang. File keystore
+    (mis. <code class="inline">wabcraft-release.jks</code>) harus dijaga &amp; dibackup.</p>
+  </div>
+  <div class="card">
+    <h4 style="margin-top:0">&#128736;&#65039; Versi aplikasi</h4>
+    <p style="margin-bottom:0">Ubah nomor versi di
+    <code class="inline">android\app\build.gradle</code>: <code class="inline">versionName "1.6"</code>
+    dan <code class="inline">versionCode 7</code>.</p>
+  </div>
+</div>
+
+<div class="warn"><b>&#9888;&#65039; APK versi release memakai isi folder
+<code class="inline">android\app\src\main\assets\www\</code></b>, bukan folder <code class="inline">app\</code>.
+Itu sebabnya <code class="inline">PASANG-FIREBASE.bat</code> menyalin otomatis. Jika Anda mengedit
+<code class="inline">config.js</code> setelah build, build ulang APK-nya.</div>
+
+<!-- ================= BAB 6 CHECKLIST ================= -->
+<div class="page-break"></div>
+<div class="bab-head">
+  <div class="no">6</div>
+  <div>
+    <h2>Daftar Periksa Akhir</h2>
+    <p>Centang satu per satu sebelum membagikan aplikasi ke wali murid.</p>
+  </div>
+</div>
+
+<div class="check">
+  <h4 style="margin-top:0">Firebase</h4>
+  <ul>
+    <li>Realtime Database sudah dibuat, lokasi <b>asia-southeast1</b>, mode test aktif</li>
+    <li>Blok <code class="inline">firebaseConfig</code> sudah ditempel ke <code class="inline">fb.txt</code> &amp; <code class="inline">PASANG-FIREBASE.bat</code> dijalankan</li>
+    <li><code class="inline">databaseURL</code> di <code class="inline">config.js</code> lengkap &amp; benar wilayahnya</li>
+    <li>Tulisan <b>MODE DEMO</b> sudah tidak muncul di aplikasi</li>
+    <li>Aturan database &amp; storage sudah di-deploy (<code class="inline">firebase deploy --only database,storage</code>)</li>
+    <li>Hosting terbit &amp; muncul <code class="inline">found 14 files in app</code></li>
+    <li>Uji dua HP berhasil (pesan masuk real-time)</li>
+  </ul>
+</div>
+
+<div class="check">
+  <h4 style="margin-top:0">Cloudflare (kalau dipakai)</h4>
+  <ul>
+    <li>Bucket <code class="inline">bpd-media</code> dibuat &amp; <b>Public access</b> aktif</li>
+    <li>Secret <code class="inline">PUBLIC_DOMAIN</code> terisi dengan URL publik R2</li>
+    <li>Worker ter-deploy, URL <code class="inline">.workers.dev</code> tercatat</li>
+    <li><code class="inline">R2_CONFIG</code> terisi &amp; <code class="inline">enabled: true</code></li>
+    <li>Upload foto dari HP berhasil tampil di chat</li>
+  </ul>
+</div>
+
+<div class="check">
+  <h4 style="margin-top:0">APK &amp; Distribusi</h4>
+  <ul>
+    <li>APK berhasil di-build (<code class="inline">BUILD SUCCESSFUL</code>) &amp; sudah di-sign</li>
+    <li>APK terpasang &amp; bisa login di HP Android uji coba</li>
+    <li>Nama sekolah, kelas, tahun ajaran di <code class="inline">config.js</code> sudah disesuaikan</li>
+    <li>Daftar murid (NIS &amp; nama) sesuai kelas yang akan dipakai</li>
+    <li>Alamat web dibagikan ke wali murid + panduan singkat pemakaian</li>
+  </ul>
+</div>
+
+<div class="tip"><b>&#127425;&#8205;&#128188; Keamanan singkat:</b> ganti kata sandi admin bawaan di
+<code class="inline">APP.adminPassword</code> (<code class="inline">config.js</code>) sebelum dibagikan,
+dan jangan sebarkan berkas keystore APK.</div>
+
+<!-- ================= BAB 7 TROUBLESHOOTING ================= -->
+<div class="page-break"></div>
+<div class="bab-head">
+  <div class="no">7</div>
+  <div>
+    <h2>Masalah Umum &amp; Cara Mengatasinya</h2>
+    <p>Cari gejalanya di kolom kiri, lalu kerjakan solusinya.</p>
+  </div>
+</div>
+
+<table>
+  <tr><th style="width:33%">Gejala</th><th>Penyebab &amp; Solusi</th></tr>
+  <tr>
+    <td><b>Masih tertulis "MODE DEMO"</b></td>
+    <td><code class="inline">apiKey</code> / <code class="inline">databaseURL</code> masih kosong.
+    Jalankan ulang <code class="inline">PASANG-FIREBASE.bat</code>. Kalau lewat APK, pastikan
+    <code class="inline">config.js</code> juga tersalin ke <code class="inline">assets\www\js\</code>.</td>
+  </tr>
+  <tr>
+    <td><b>"database not found"</b></td>
+    <td>Realtime Database belum dibuat di Console. Kerjakan langkah 3.2, lalu deploy ulang.</td>
+  </tr>
+  <tr>
+    <td><b>"Permission denied" di console browser</b></td>
+    <td>Aturan belum di-publish, atau test mode sudah lewat 30 hari.
+    Jalankan <code class="inline">firebase deploy --only database,storage</code>.</td>
+  </tr>
+  <tr>
+    <td><b>Pesan tidak muncul di HP lain</b></td>
+    <td>Kedua perangkat harus memakai <code class="inline">FIREBASE_CONFIG</code> yang sama persis.
+    Periksa juga <code class="inline">databaseURL</code> — salah wilayah berarti data masuk ke database lain.</td>
+  </tr>
+  <tr>
+    <td><b>Deploy gagal: "Executable files are forbidden on the Spark billing plan"</b></td>
+    <td><code class="inline">firebase.json</code> memakai <code class="inline">"public": "."</code> sehingga
+    file Android ikut terunggah. Ubah menjadi <code class="inline">"public": "app"</code>.</td>
+  </tr>
+  <tr>
+    <td><b>Halaman "Firebase Hosting Setup Complete"</b></td>
+    <td><code class="inline">index.html</code> tertimpa. Salin ulang dari
+    <code class="inline">android\app\src\main\assets\www\index.html</code>, lalu deploy lagi.</td>
+  </tr>
+  <tr>
+    <td><b>Upload foto gagal / "Gagal koneksi ke R2"</b></td>
+    <td>Periksa <code class="inline">R2_CONFIG.workerUrl</code> benar &amp; <code class="inline">enabled: true</code>;
+    secret <code class="inline">PUBLIC_DOMAIN</code> sudah diisi; bucket sudah <b>Public access</b>.</td>
+  </tr>
+  <tr>
+    <td><b>"Tipe file tidak diizinkan"</b></td>
+    <td>Yang diizinkan: jpg, png, gif, webp, mp4, webm, mp3, m4a, PDF &mdash; maksimal 20 MB.</td>
+  </tr>
+  <tr>
+    <td><b>Tombol Pengaturan Hari Efektif gagal menyimpan</b></td>
+    <td>Aturan database belum punya node <code class="inline">pengaturan</code>. Pakai
+    <code class="inline">firebase\database.rules.json</code> bawaan.</td>
+  </tr>
+  <tr>
+    <td><b>Build APK gagal / "ANDROID_HOME belum diset"</b></td>
+    <td>Install Android Studio, buka sekali, lalu jalankan lagi
+    <code class="inline">build-release.bat</code> (skrip mencari SDK otomatis).</td>
+  </tr>
+  <tr>
+    <td><b>Wrangler: "not logged in" / deploy gagal</b></td>
+    <td>Jalankan <code class="inline">npx wrangler login</code>, pastikan Node.js &ge; 18, dan nama bucket
+    di <code class="inline">wrangler.toml</code> sama dengan di Cloudflare.</td>
+  </tr>
+</table>
+
+<div class="danger"><b>&#128680; Jika semua gagal:</b> periksa dulu koneksi internet dan ulangi perintah
+dari <b>folder induk project</b>. Sebagian besar kesalahan pemula berasal dari folder yang salah saat
+mengetik perintah.</div>
+
+<!-- ================= BAB 8 ================= -->
+<div class="page-break"></div>
+<div class="bab-head">
+  <div class="no">8</div>
+  <div>
+    <h2>Biaya, FAQ &amp; Penutup</h2>
+    <p>Yang perlu Anda ketahui sebelum memakai ini jangka panjang.</p>
+  </div>
+</div>
+
+<h3>8.1 Perkiraan biaya</h3>
+<table>
+  <tr><th style="width:46%">Komponen</th><th style="width:26%">Kuota gratis</th><th>Keterangan</th></tr>
+  <tr><td>Firebase Hosting</td><td>10 GB transfer / bulan</td><td>Cukup untuk sekolah dasar</td></tr>
+  <tr><td>Firebase Realtime Database</td><td>10 GB penyimpanan, 10 GB/hari unduhan</td><td>Chat &amp; absensi sangat ringan</td></tr>
+  <tr><td>Cloudflare R2</td><td>10 GB + unduhan tanpa batas</td><td>Media chat</td></tr>
+  <tr><td>Cloudflare Worker</td><td>100 ribu request / hari</td><td>Upload media</td></tr>
+  <tr><td>GitHub Pages (panduan &amp; landing page)</td><td>Tanpa batas (public repo)</td><td>Dokumen &amp; unduhan APK</td></tr>
+  <tr><td><b>Total</b></td><td><b>$0 / bulan</b></td><td>Selama tetap di kuota gratis</td></tr>
+</table>
+
+<h3>8.2 Pertanyaan umum</h3>
+<div class="card">
+  <p><b>Q: Harus bisa coding?</b><br>
+  Tidak. Ikuti langkahnya saja; bagian yang perlu diubah sudah disiapkan berkasnya.</p>
+  <p><b>Q: Bisa dipakai untuk sekolah lain / kelas lain?</b><br>
+  Bisa. Buat project Firebase baru, ubah nama sekolah, kelas, dan daftar murid di
+  <code class="inline">app/js/config.js</code>, lalu deploy.</p>
+  <p style="margin-bottom:0"><b>Q: Bagaimana di akhir tahun ajaran?</b><br>
+  Kosongkan data lama lewat menu guru <i>Reset Data</i>, hapus isi bucket R2, lalu perbarui
+  daftar murid &amp; tahun ajaran.</p>
+</div>
+
+<div class="card tint">
+  <h3 style="margin-top:0">&#128214; Ringkasan satu halaman</h3>
+  <div class="term" style="margin-bottom:0">
+    <div class="bar"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><span>perintah yang paling sering dipakai</span></div>
+    <pre><span class="o"># 1. isi konfigurasi (klik 2x):  PASANG-FIREBASE.bat</span>
+<span class="c">firebase deploy --only database,storage</span>   <span class="o"># aturan keamanan</span>
+<span class="c">firebase deploy --only hosting</span>            <span class="o"># terbitkan aplikasi</span>
+
+<span class="o"># 2. cloudflare (sekali setup)</span>
+<span class="c">cd cloudflare</span>
+<span class="c">npx wrangler secret put PUBLIC_DOMAIN</span>
+<span class="c">npx wrangler deploy</span>
+
+<span class="o"># 3. apk android</span>
+<span class="c">cd android</span> &amp; <span class="c">.\gradlew.bat assembleRelease</span></pre>
+  </div>
+</div>
+
+<div class="cover" style="padding:26px 30px; margin-top:6px">
+  <div style="font-size:24px">&#127891;</div>
+  <div style="font-size:17px;font-weight:800;margin-top:6px">Selamat mencoba!</div>
+  <div style="font-size:12px;color:rgba(255,255,255,.9);margin-top:5px;max-width:70ch">
+    Panduan ini dibuat untuk membantu guru &amp; operator sekolah memasang
+    <b>Buku Penghubung Digital</b> secara mandiri. Ada kendala? Hubungi guru kelas
+    atau kirim email ke <b>guru.kayaraya.id@gmail.com</b>.</div>
+  <div class="meta" style="margin-top:20px">
+    <span>Panduan Instalasi Firebase &amp; Cloudflare v1.0</span>
+    <span>SD Negeri Semambung &middot; Kelas III &middot; TA 2026/2027</span>
+  </div>
+</div>
+
+<div class="foot-note">Dokumen ini bagian dari materi Buku Penghubung Digital &mdash; boleh disalin &amp; dibagikan untuk keperluan sekolah.</div>
+
+</body>
+</html>
