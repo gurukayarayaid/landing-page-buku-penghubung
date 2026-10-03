@@ -114,7 +114,7 @@
   }
 
   /* SECTIONS */
-  section { padding: 58px 0; }
+  section { padding: 58px 0; scroll-margin-top: 72px; }
   .sec-head { text-align: center; max-width: 720px; margin: 0 auto 34px; }
   .sec-head .kicker { color: var(--green-600); font-weight: 800; font-size: 12.5px; letter-spacing: 2px; text-transform: uppercase; }
   .sec-head h2 { font-size: clamp(22px, 3vw, 32px); margin: 6px 0 8px; color: var(--green-900); }
@@ -141,8 +141,9 @@
 
   /* STEPS */
   .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; counter-reset: step; }
-  @media (max-width: 900px) { .steps { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 560px) { .steps { grid-template-columns: 1fr; } }
+  .steps.three { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 900px) { .steps, .steps.three { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .steps, .steps.three { grid-template-columns: 1fr; } }
   .step { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 20px 20px; position: relative; counter-increment: step; }
   .step::before {
     content: counter(step); position: absolute; top: -16px; left: 20px;
@@ -153,6 +154,41 @@
   .step h3 { font-size: 15.5px; margin: 8px 0 6px; color: var(--green-900); }
   .step p { font-size: 14px; color: var(--muted); }
   .step code { background: #eef5f4; padding: 1px 6px; border-radius: 5px; color: var(--green-700); font-weight: 700; }
+
+  /* SCREENSHOTS */
+  .shots { display: grid; gap: 22px; }
+  .shots-3 { grid-template-columns: repeat(3, 1fr); }
+  .shots-2 { grid-template-columns: repeat(2, 1fr); }
+  .shots-5 { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 900px) { .shots-3, .shots-5 { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 620px) { .shots-3, .shots-2, .shots-5 { grid-template-columns: 1fr; } }
+  .shot { margin: 0; }
+  .device {
+    background: #0f2f2b; border: 5px solid #0f2f2b; border-radius: 26px; overflow: hidden;
+    box-shadow: var(--shadow); transition: transform .2s ease;
+  }
+  .shot:hover .device { transform: translateY(-5px); }
+  .device img { width: 100%; display: block; background: #fff; }
+  .shot figcaption {
+    background: #fff; border: 1px solid var(--line); border-top: none;
+    border-radius: 0 0 14px 14px; padding: 14px 16px; font-size: 14.2px; color: var(--muted);
+  }
+  .shot figcaption b { color: var(--green-900); }
+  .shot figcaption > b:first-child { display: block; font-size: 15px; margin-bottom: 3px; }
+  .shot figcaption code { background: #eef5f4; padding: 1px 5px; border-radius: 5px; color: var(--green-700); font-weight: 700; }
+  .shot .num {
+    display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%;
+    background: var(--green-700); color: #fff; font-size: 12.5px; font-weight: 800; margin-right: 7px;
+    vertical-align: -5px;
+  }
+  .privacy {
+    display: flex; gap: 10px; align-items: flex-start; background: #eef5f4; border: 1px dashed #b9d8d2;
+    border-radius: 12px; padding: 14px 16px; font-size: 14px;
+    color: #40605c; max-width: 860px; margin: 0 auto 28px;
+  }
+  .menu-list { display: grid; gap: 10px; margin-top: 6px; }
+  .menu-list div { background: #f4f8f7; border-radius: 9px; padding: 8px 12px; font-size: 13.5px; }
+  .menu-list b { color: var(--green-700); }
 
   /* DOWNLOAD */
   .download {
@@ -216,8 +252,9 @@
     </a>
     <nav class="links">
       <a href="#fitur">Fitur</a>
-      <a href="#cara-pakai">Cara Pakai</a>
-      <a href="#unduh">Unduh</a>
+      <a href="#instalasi">Instalasi</a>
+      <a href="#login">Tutorial Login</a>
+      <a href="#menu">Menu Aplikasi</a>
       <a href="#faq">FAQ</a>
     </nav>
     <a class="nav-cta" href="#unduh">Unduh APK v1.6</a>
@@ -338,38 +375,160 @@
   </div>
 </section>
 
-<!-- CARA PAKAI -->
-<section id="cara-pakai" style="background:#eef5f4;">
+<!-- INSTALASI APK -->
+<section id="instalasi" style="background:#eef5f4;">
   <div class="wrap">
     <div class="sec-head">
-      <div class="kicker">Langkah demi Langkah</div>
-      <h2>Cara memulai dalam 4 langkah</h2>
-      <p>Sangat mudah, bahkan untuk yang baru pertama kali memakai aplikasi.</p>
+      <div class="kicker">Panduan Lengkap</div>
+      <h2>Cara Install Aplikasi Android (APK)</h2>
+      <p>Ikuti 6 langkah berikut. Aplikasi tidak diunduh dari Play Store, jadi ada satu langkah izin tambahan.</p>
     </div>
 
-    <div class="steps">
+    <div class="steps three">
       <div class="step">
-        <h3>Download aplikasinya</h3>
-        <p>Tekan tombol <b>Download Aplikasi Android</b> di halaman ini. File APK v1.6 akan tersimpan di HP Anda.</p>
+        <h3>Unduh file APK</h3>
+        <p>Tekan tombol <b>Download Aplikasi Android</b> di halaman ini. Tunggu hingga unduhan selesai (ukuran ± <b>8,4 MB</b>).</p>
       </div>
       <div class="step">
-        <h3>Install (pasang)</h3>
-        <p>Buka file APK yang sudah diunduh. Jika diminta, izinkan pemasangan dari <b>sumber tidak dikenal</b>, lalu pilih <b>Install</b>.</p>
+        <h3>Buka file APK</h3>
+        <p>Ketuk notifikasi &ldquo;Unduhan selesai&rdquo;, <b>atau</b> buka <b>File Manager &rarr; folder Download</b> lalu ketuk file <code>BukuPenghubungDigital...v1.6-release.apk</code>.</p>
       </div>
       <div class="step">
-        <h3>Login sebagai Wali Murid</h3>
-        <p>Buka aplikasi &rarr; pilih <b>nama anak</b> dari daftar &rarr; masukkan <b>NIS anak</b> sebagai kata sandi (contoh: <code>3262</code>) &rarr; tekan <b>MASUK</b>.</p>
+        <h3>Izinkan pemasangan</h3>
+        <p>Muncul peringatan <i>&ldquo;Pemasangan diblokir&rdquo;</i>. Pilih <b>Setelan</b> &rarr; aktifkan <b>Izinkan dari sumber ini</b> (Android 8+) atau centang <b>Sumber tidak diketahui</b> (Android 5&ndash;7).</p>
       </div>
       <div class="step">
-        <h3>Mulai berkomunikasi</h3>
-        <p>Tab <b>PESAN</b> terbuka otomatis. Anda sudah bisa chat dengan guru, kirim surat izin, dan melihat absensi anak.</p>
+        <h3>Tekan tombol Install</h3>
+        <p>Kembali ke layar pemasangan, lalu ketuk <b>Install</b>. Tunggu beberapa detik hingga proses selesai.</p>
+      </div>
+      <div class="step">
+        <h3>Buka aplikasinya</h3>
+        <p>Ketuk <b>Buka</b>, atau cari ikon <b>Buku Penghubung Digital</b> di layar utama HP. Berikan izin notifikasi agar pesan dari guru masuk.</p>
+      </div>
+      <div class="step">
+        <h3>Login &amp; selesai</h3>
+        <p>Pilih nama anak, masukkan NIS, tekan <b>MASUK</b>. Aplikasi siap dipakai setiap hari untuk komunikasi dengan guru.</p>
       </div>
     </div>
 
     <div class="note">
-      <b>&#128161; Tips:</b> NIS adalah nomor induk siswa yang tertera di rapor atau buku absensi anak.
-      Lupa NIS? Silakan hubungi guru kelas. Alternatif lain: buka aplikasi lewat browser dengan tombol
-      <b>&ldquo;Buka Aplikasi Web&rdquo;</b>.
+      <b>&#9888;&#65039; Peringatan Play Protect:</b> Google mungkin menampilkan <i>&ldquo;Play Protect memblokir aplikasi yang tidak dikenal&rdquo;</i>.
+      Pilih <b>Tetap instal</b> &mdash; file ini resmi dibuat sekolah, bukan aplikasi asing. Aplikasi hanya butuh Android 5.0 ke atas dan tidak meminta izin yang aneh-aneh.
+    </div>
+
+    <div class="note" style="background:#E8F5E9;border-left-color:#4CAF50;color:#1b5e20;">
+      <b>&#128161; Alternatif tanpa install:</b> buka versi web lewat browser HP dengan tombol
+      <b>&ldquo;Buka Aplikasi Web&rdquo;</b>. Tampilannya sama persis, hanya saja notifikasi tidak secepat versi APK.
+    </div>
+  </div>
+</section>
+
+<!-- TUTORIAL LOGIN -->
+<section id="login">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Tutorial Login Wali Murid</div>
+      <h2>3 langkah masuk ke aplikasi</h2>
+      <p>Tidak perlu daftar akun baru. Cukup nama anak dan nomor NIS.</p>
+    </div>
+
+    <div class="privacy">
+      <span style="font-size:18px">&#128274;</span>
+      <span><b>Catatan privasi:</b> seluruh screenshot di halaman ini diambil dari aplikasi asli dengan akun contoh NIS 3262.
+      <b>Nama murid sengaja di-blur (kaburkan)</b> untuk melindungi data pribadi anak. NIS tetap ditampilkan sebagai contoh cara login.</span>
+    </div>
+
+    <div class="shots shots-3">
+      <figure class="shot">
+        <div class="device"><img src="img/01-login-kosong.png" alt="Halaman login Buku Penghubung Digital dengan pilihan nama murid" loading="lazy"></div>
+        <figcaption>
+          <b><span class="num">1</span>Buka aplikasi</b>
+          Halaman login tampil seperti ini. Pada kolom <b>Nama Murid</b>, ketuk tanda panah &#9662; lalu pilih nama anak Anda dari daftar.
+        </figcaption>
+      </figure>
+      <figure class="shot">
+        <div class="device"><img src="img/02-login-terisi.png" alt="Formulir login terisi nama murid dan kata sandi NIS" loading="lazy"></div>
+        <figcaption>
+          <b><span class="num">2</span>Isi kata sandi NIS</b>
+          Masukkan <b>NIS anak</b> pada kolom <b>Kata Sandi (NIS)</b> &mdash; bukan password lain. Contoh: NIS 3262 &rarr; ketik <code>3262</code>, lalu tekan <b>MASUK</b>.
+        </figcaption>
+      </figure>
+      <figure class="shot">
+        <div class="device"><img src="img/03-pesan.png" alt="Tampilan tab pesan setelah berhasil login" loading="lazy"></div>
+        <figcaption>
+          <b><span class="num">3</span>Berhasil masuk</b>
+          Anda langsung masuk ke tab <b>PESAN</b>. Di baris atas terlihat nama anak, NIS, dan kelas; kolom bawah untuk mengetik pesan ke guru.
+        </figcaption>
+      </figure>
+    </div>
+
+    <div class="note">
+      <b>&#128270; Ingat:</b> kata sandi = NIS anak (ada di rapor / buku absensi). Jika lupa, hubungi guru kelas.
+      Untuk keluar atau ganti akun, buka menu <b>INFO &rarr; Keluar / Ganti Akun</b>.
+    </div>
+  </div>
+</section>
+
+<!-- MENU APLIKASI -->
+<section id="menu" style="background:#eef5f4;">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Kenali Isi Aplikasi</div>
+      <h2>Penjelasan menu-menu di dalam aplikasi</h2>
+      <p>Semua menu dapat dibuka lewat tombol &#9776; (hamburger) di pojok kiri atas layar.</p>
+    </div>
+
+    <div class="shots shots-3">
+      <figure class="shot">
+        <div class="device"><img src="img/04-menu.png" alt="Daftar menu aplikasi: Pesan, Surat Izin, Absensi, Info" loading="lazy"></div>
+        <figcaption>
+          <b><span class="num">&#9776;</span>Daftar Menu</b>
+          Ketuk tombol &#9776; untuk membuka 4 menu utama. Nama menu yang sedang aktif selalu tampil di sebelahnya.
+          <div class="menu-list">
+            <div><b>PESAN</b> &mdash; chat dengan guru kelas</div>
+            <div><b>SURAT IZIN</b> &mdash; kirim izin tidak masuk sekolah</div>
+            <div><b>ABSENSI</b> &mdash; rekap kehadiran anak</div>
+            <div><b>INFO</b> &mdash; data guru, data anak, pengaturan</div>
+          </div>
+        </figcaption>
+      </figure>
+
+      <figure class="shot">
+        <div class="device"><img src="img/03-pesan.png" alt="Tampilan menu pesan untuk chat dengan guru" loading="lazy"></div>
+        <figcaption>
+          <b><span class="num">1</span>Menu PESAN</b>
+          Ruang obrolan langsung dengan guru. Ketik pesan lalu tekan &#10148; atau Enter. Lampiran &#128206; untuk foto/video/audio/PDF (maks 20 MB) dan tombol &#127908; untuk merekam pesan suara.
+        </figcaption>
+      </figure>
+
+      <figure class="shot">
+        <div class="device"><img src="img/05-surat-izin.png" alt="Formulir surat izin wali murid" loading="lazy"></div>
+        <figcaption>
+          <b><span class="num">2</span>Menu SURAT IZIN</b>
+          Isi jenis izin, tanggal mulai &amp; selesai, alasan, lampiran foto surat dokter (opsional), lalu <b>bubuhkan tanda tangan</b> di kotak yang disediakan. Tekan <b>KIRIM SURAT IZIN</b> &mdash; guru menerima notifikasi dan menyetujui/menolaknya.
+        </figcaption>
+      </figure>
+
+      <figure class="shot">
+        <div class="device"><img src="img/06-absensi.png" alt="Rekap absensi kehadiran anak" loading="lazy"></div>
+        <figcaption>
+          <b><span class="num">3</span>Menu ABSENSI</b>
+          Rekap kehadiran anak per <b>Hari Ini / Bulanan / Semester</b>: jumlah Hadir, Izin, Sakit, Alpa, hari efektif, dan persentase kehadiran. Ada juga rincian harian beserta jam masuk, tombol <b>Cetak PDF</b>, dan <b>Kartu QR</b> absensi.
+        </figcaption>
+      </figure>
+
+      <figure class="shot">
+        <div class="device"><img src="img/07-info.png" alt="Halaman info berisi data guru, data anak, dan pengaturan" loading="lazy"></div>
+        <figcaption>
+          <b><span class="num">4</span>Menu INFO</b>
+          Berisi <b>data guru kelas</b> (lengkap dengan tombol Hubungi via WhatsApp), <b>data anak</b> (NIS, kelas, no. WA wali, cetak kartu QR), serta pengaturan <b>Aktifkan Notifikasi</b> dan <b>Keluar / Ganti Akun</b>.
+        </figcaption>
+      </figure>
+    </div>
+
+    <div class="note" style="max-width:860px;margin:26px auto 0;">
+      <b>&#128203; Singkatnya:</b> gunakan <b>PESAN</b> untuk bertanya ke guru, <b>SURAT IZIN</b> saat anak berhalangan masuk,
+      <b>ABSENSI</b> untuk memantau kehadiran, dan <b>INFO</b> bila butuh kontak guru atau keluar dari akun.
     </div>
   </div>
 </section>
@@ -470,7 +629,9 @@
           <li><a href="BukuPenghubungDigital-SDN-Semambung-v1.6-release.apk" download>Download APK Android v1.6</a></li>
           <li><a href="https://buku-penghubung-f579b.web.app/" target="_blank" rel="noopener">Buka Aplikasi Web</a></li>
           <li><a href="#fitur">Fitur Aplikasi</a></li>
-          <li><a href="#cara-pakai">Cara Pakai</a></li>
+          <li><a href="#instalasi">Panduan Instalasi APK</a></li>
+          <li><a href="#login">Tutorial Login Wali Murid</a></li>
+          <li><a href="#menu">Menu di Dalam Aplikasi</a></li>
           <li><a href="#faq">FAQ</a></li>
         </ul>
       </div>
